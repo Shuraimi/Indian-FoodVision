@@ -70,18 +70,42 @@ export default function IndianFoodVision() {
     setError(null);
 
     try {
+      // Sanitize filename (remove spaces) to avoid any edge cases on server
+      const safeFileName = file.name ? file.name.replace(/\s+/g, '_') : `upload.${file.type.split('/').pop()}`;
+      const safeFile = new File([file], safeFileName, { type: file.type });
+
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', safeFile);
 
-      console.log('Classifying:', file.name, file.size, file.type);
+      console.log('Classifying:', safeFile.name, safeFile.size, safeFile.type);
 
-      const response = await fetch('https://indianfoodvision.onrender.com/predict', {
-        method: 'POST',
-        body: formData,
-        keepalive: true,
-      });
+      // Primary attempt
+      let response;
+      try {
+        response = await fetch('https://indianfoodvision.onrender.com/predict', {
+          method: 'POST',
+          body: formData,
+          keepalive: true,
+        });
+      } catch (primaryErr) {
+        console.warn('Primary fetch failed, will retry with fallback options', primaryErr);
 
-      console.log('API response:', response.status);
+        // Retry with more explicit options (no keepalive) to work around some network/CORS edge cases
+        try {
+          response = await fetch('https://indianfoodvision.onrender.com/predict', {
+            method: 'POST',
+            body: formData,
+            mode: 'cors',
+            cache: 'no-store',
+          });
+        } catch (secondaryErr) {
+          // Attach both errors for debugging
+          console.error('Both primary and fallback fetch attempts failed', { primaryErr, secondaryErr });
+          throw secondaryErr || primaryErr;
+        }
+      }
+
+      console.log('API response status:', response && response.status);
 
       if (!response.ok) {
         throw new Error(`API error: ${response.status}`);
@@ -98,8 +122,12 @@ export default function IndianFoodVision() {
         time: data.processing_time.toFixed(3),
       });
     } catch (err) {
-      console.error('Classification error:', err);
-      setError(err.message || 'Failed to classify image');
+      console.error('Classification error:', err && (err.stack || err.message || err));
+      // If it's a network-level failure, provide a specific hint
+      const msg = err && err.message && err.message.includes('Failed to fetch')
+        ? 'Network error: failed to contact prediction API. Check CORS, network, or server status.'
+        : (err.message || 'Failed to classify image');
+      setError(msg);
     } finally {
       setIsLoading(false);
     }
