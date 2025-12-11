@@ -77,7 +77,7 @@ export default function IndianFoodVision() {
       const formData = new FormData();
       formData.append('file', safeFile);
 
-      console.log('Classifying:', safeFile.name, safeFile.size, safeFile.type);
+      // minimal logging retained for critical info
 
       // Primary attempt
       let response;
@@ -88,7 +88,7 @@ export default function IndianFoodVision() {
           keepalive: true,
         });
       } catch (primaryErr) {
-        console.warn('Primary fetch failed, will retry with fallback options', primaryErr);
+        console.warn('Primary fetch failed; retrying with fallback options');
 
         // Retry with more explicit options (no keepalive) to work around some network/CORS edge cases
         try {
@@ -99,20 +99,16 @@ export default function IndianFoodVision() {
             cache: 'no-store',
           });
         } catch (secondaryErr) {
-          // Attach both errors for debugging
-          console.error('Both primary and fallback fetch attempts failed', { primaryErr, secondaryErr });
+          console.error('Both primary and fallback fetch attempts failed');
           throw secondaryErr || primaryErr;
         }
       }
-
-      console.log('API response status:', response && response.status);
 
       if (!response.ok) {
         throw new Error(`API error: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log('Classification result:', data);
 
       setPredictions({
         predictions: data.predictions.map(([label, probability]) => ({
@@ -122,7 +118,7 @@ export default function IndianFoodVision() {
         time: data.processing_time.toFixed(3),
       });
     } catch (err) {
-      console.error('Classification error:', err && (err.stack || err.message || err));
+      console.error('Classification error:', err && (err.message || err));
       // If it's a network-level failure, provide a specific hint
       const msg = err && err.message && err.message.includes('Failed to fetch')
         ? 'Network error: failed to contact prediction API. Check CORS, network, or server status.'
