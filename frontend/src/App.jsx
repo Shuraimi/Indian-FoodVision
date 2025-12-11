@@ -153,8 +153,8 @@ export default function IndianFoodVision() {
       {/* Hero Header */}
       <div className="bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 text-white py-16 px-4">
         <div className="container mx-auto max-w-6xl">
-          <div className="flex items-center justify-start gap-6 mb-4">
-            <img src="/restaurant-cutlery-circular-symbol-of-a-spoon-and-a-fork-in-a-circle.png" alt="Food" className="w-20 h-20 object-contain" />
+          <div className="flex items-center justify-center gap-6 mb-4">
+            <img src="/pizza.png" alt="Food" className="w-20 h-20 object-contain" />
             <h1 className="text-6xl font-bold">Indian Food Vision</h1>
           </div>
           <p className="text-center text-xl text-white/90 mb-8">
