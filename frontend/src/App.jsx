@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Upload, Clock, Sparkles, Award, Zap, AlertCircle } from 'lucide-react';
 
+// Import example images so Vite bundles them into production build
+import biryaniImg from '../examples/biryani.jpg';
+import masalaDosaImg from '../examples/masala_dosa.jpg';
+import gulabJamunImg from '../examples/gulab_jamun.jpg';
+import paniPuriImg from '../examples/pani_puri.jpg';
+import haraBharaKababImg from '../examples/hara_bhara_kabab.jpg';
+import faloodaImg from '../examples/falooda.jpg';
+import chickenPizzaImg from '../examples/chicken_pizza.jpg';
+import sandwichImg from '../examples/sandwich.jpg';
+
 export default function IndianFoodVision() {
   const [imagePreview, setImagePreview] = useState(null);
   const [predictions, setPredictions] = useState(null);
@@ -28,14 +38,14 @@ export default function IndianFoodVision() {
 
   // Example images - will be loaded from /examples folder
   const exampleImages = [
-    { path: 'frontend\examples\biryani.jpg', name: 'Biryani' },
-    { path: '/examples/masala_dosa.jpg', name: 'Masala Dosa' },
-    { path: '/examples/gulab_jamun.jpg', name: 'Gulab Jamun' },
-    { path: '/examples/pani_puri.jpg', name: 'Pani Puri' },
-    { path: '/examples/hara_bhara_kabab.jpg', name: 'Hara Bhara Kabab' },
-    { path: '/examples/falooda.jpg', name: 'Falooda' },
-    { path: '/examples/chicken_pizza.jpg', name: 'Chicken Pizza' },
-    { path: '/examples/sandwich.jpg', name: 'Sandwich' }
+    { path: biryaniImg, name: 'Biryani' },
+    { path: masalaDosaImg, name: 'Masala Dosa' },
+    { path: gulabJamunImg, name: 'Gulab Jamun' },
+    { path: paniPuriImg, name: 'Pani Puri' },
+    { path: haraBharaKababImg, name: 'Hara Bhara Kabab' },
+    { path: faloodaImg, name: 'Falooda' },
+    { path: chickenPizzaImg, name: 'Chicken Pizza' },
+    { path: sandwichImg, name: 'Sandwich' }
   ];
 
   const handleImageUpload = async (e) => {
