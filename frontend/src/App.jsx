@@ -28,7 +28,7 @@ export default function IndianFoodVision() {
 
   // Example images - will be loaded from /examples folder
   const exampleImages = [
-    { path: '/examples/biryani.jpg', name: 'Biryani' },
+    { path: 'frontend\examples\biryani.jpg', name: 'Biryani' },
     { path: '/examples/masala_dosa.jpg', name: 'Masala Dosa' },
     { path: '/examples/gulab_jamun.jpg', name: 'Gulab Jamun' },
     { path: '/examples/pani_puri.jpg', name: 'Pani Puri' },
